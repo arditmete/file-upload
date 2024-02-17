@@ -1,7 +1,7 @@
-package model.Logikcull.assignment.service
+package com.logikcull.assignment.service
 
-import model.Logikcull.assignment.model.dto.ResponseDTO
-import model.Logikcull.assignment.model.enums.FileType
+import com.logikcull.assignment.model.dto.ResponseDTO
+import com.logikcull.assignment.model.enums.FileType
 import org.springframework.web.multipart.MultipartFile
 
 interface UploadFileService {

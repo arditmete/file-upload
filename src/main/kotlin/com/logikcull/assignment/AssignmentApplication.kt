@@ -1,4 +1,4 @@
-package model.Logikcull.assignment
+package com.logikcull.assignment
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication

@@ -1,11 +1,11 @@
-package model.Logikcull.assignment.service.impl
+package com.logikcull.assignment.service.impl
 
-import com.Logikcull.assignment.parser.LoadFileParser
-import com.Logikcull.assignment.validator.LoadFileValidator
-import model.Logikcull.assignment.model.dto.ResponseDTO
-import model.Logikcull.assignment.model.enums.FileStatus
-import model.Logikcull.assignment.model.enums.FileType
-import model.Logikcull.assignment.service.UploadFileService
+import com.logikcull.assignment.model.dto.ResponseDTO
+import com.logikcull.assignment.model.enums.FileStatus
+import com.logikcull.assignment.model.enums.FileType
+import com.logikcull.assignment.parser.LoadFileParser
+import com.logikcull.assignment.service.UploadFileService
+import com.logikcull.assignment.validator.Validator
 import org.springframework.stereotype.Service
 import org.springframework.util.StringUtils
 import org.springframework.web.multipart.MultipartFile
@@ -42,8 +42,8 @@ class UploadFileServiceImpl: UploadFileService {
             FileType.LFP-> LoadFileParser.parseCsv(targetFile)
             FileType.XLF -> LoadFileParser.parseXml(targetFile)
         }
-        LoadFileValidator.validateControlNumbers(result)
-        LoadFileValidator.validateImagePathExtensions(result)
+        Validator.validateControlNumbers(result)
+        Validator.validateImagePathExtensions(result)
         return ResponseDTO(
                 status = FileStatus.SUCCESS,
                 description = "File uploaded successfully.",

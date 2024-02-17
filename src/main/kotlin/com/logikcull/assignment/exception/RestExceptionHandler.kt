@@ -1,4 +1,4 @@
-package model.Logikcull.assignment.exception
+package com.logikcull.assignment.exception
 
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.MethodArgumentNotValidException

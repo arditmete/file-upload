@@ -1,6 +1,6 @@
-package com.Logikcull.assignment.parser
+package com.logikcull.assignment.parser
 
-import com.Logikcull.assignment.model.LoadFileEntry
+import com.logikcull.assignment.model.LoadFileEntry
 import org.springframework.stereotype.Component
 import java.io.File
 import javax.xml.parsers.DocumentBuilderFactory

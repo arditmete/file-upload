@@ -1,7 +1,7 @@
-package com.Logikcull.assignment.controller
+package com.logikcull.assignment.controller
 
-import model.Logikcull.assignment.model.dto.ResponseDTO
-import model.Logikcull.assignment.service.UploadFileService
+import com.logikcull.assignment.model.dto.ResponseDTO
+import com.logikcull.assignment.service.UploadFileService
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController

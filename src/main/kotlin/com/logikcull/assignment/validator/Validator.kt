@@ -1,19 +1,20 @@
-package com.Logikcull.assignment.validator
+package com.logikcull.assignment.validator
 
-import com.Logikcull.assignment.model.LoadFileEntry
+import com.logikcull.assignment.model.LoadFileEntry
 import org.apache.coyote.BadRequestException
 import org.springframework.stereotype.Component
 import java.util.*
 
 @Component
-class LoadFileValidator {
+class Validator {
     companion object {
         fun validateControlNumbers(entries: List<LoadFileEntry>): Boolean {
             val regex = Regex("^[a-zA-Z]+-\\d{6}$")
-            return if(entries.all { entry -> entry.controlNumber.matches(regex) })
+            return if(entries.all { entry -> entry.controlNumber.matches(regex) }) {
                 true
-            else
+            } else {
                 throw BadRequestException()
+            }
         }
 
         fun validateImagePathExtensions(entries: List<LoadFileEntry>): Boolean {

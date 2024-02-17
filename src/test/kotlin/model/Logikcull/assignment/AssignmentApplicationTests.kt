@@ -1,4 +1,4 @@
-package model.Logikcull.assignment
+package model.logikcull.assignment
 
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest

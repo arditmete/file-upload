@@ -1,4 +1,4 @@
-package model.Logikcull.assignment.exception
+package com.logikcull.assignment.exception
 
 data class ErrorResponseDto(
         var errorCode: Int,
