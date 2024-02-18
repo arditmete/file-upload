@@ -25,6 +25,9 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	compileOnly ("org.projectlombok:lombok:1.18.22")
 	annotationProcessor ("org.projectlombok:lombok:1.18.22")
+	implementation ("javax.validation:validation-api:2.0.1.Final")
+	implementation("org.hibernate.validator:hibernate-validator:6.2.0.Final")
+	implementation ("org.springdoc:springdoc-openapi-ui:1.6.4")
 }
 
 tasks.withType<KotlinCompile> {

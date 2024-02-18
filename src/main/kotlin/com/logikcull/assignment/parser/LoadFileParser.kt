@@ -2,13 +2,14 @@ package com.logikcull.assignment.parser
 
 import com.logikcull.assignment.model.LoadFileEntry
 import org.springframework.stereotype.Component
-import java.io.File
+import org.xml.sax.InputSource
+import java.io.InputStreamReader
 import javax.xml.parsers.DocumentBuilderFactory
 
 @Component
 class LoadFileParser {
     companion object {
-        fun parseCsv(loadFile: File): List<LoadFileEntry> {
+        fun parseCsv(loadFile: InputStreamReader): List<LoadFileEntry> {
             val entries = mutableListOf<LoadFileEntry>()
             loadFile.forEachLine { line ->
                 val columns = line.split(",")
@@ -21,10 +22,10 @@ class LoadFileParser {
             return entries
         }
 
-        fun parseXml(loadFile: File): List<LoadFileEntry> {
+        fun parseXml(loadFile: InputStreamReader): List<LoadFileEntry> {
             val entries = mutableListOf<LoadFileEntry>()
             val docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder()
-            val doc = docBuilder.parse(loadFile)
+            val doc = docBuilder.parse(InputSource(loadFile))
             val nodeList = doc.getElementsByTagName("entry")
             for (i in 0 until nodeList.length) {
                 val node = nodeList.item(i)
