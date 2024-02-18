@@ -20,11 +20,11 @@ The Load File Processor API is designed to facilitate the parsing and validation
 
 To deploy the Load File Processor API, follow these steps:
 
-Clone the repository: git clone https://github.com/arditmete/file-upload.git
-Navigate to the project directory: cd file-upload
-Build the project: ./gradlew build
-Run the application: ./gradlew bootRun
-The API will be accessible at http://localhost:8080.
+* Clone the repository: git clone https://github.com/arditmete/file-upload.git
+* Navigate to the project directory: cd file-upload
+* Build the project: ./gradlew build
+R* un the application: ./gradlew bootRun
+* The API will be accessible at http://localhost:8080.
 
 ### Usage
 
