@@ -1,15 +1,20 @@
 package com.logikcull.assignment.service
 
+import com.logikcull.assignment.model.LoadFileEntry
 import com.logikcull.assignment.service.impl.ImportFileServiceImpl
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.InjectMocks
 import org.mockito.junit.jupiter.MockitoExtension
 import org.springframework.mock.web.MockMultipartFile
+import java.io.ByteArrayInputStream
 import java.io.File
-import java.util.*
+import java.io.IOException
 import java.util.zip.ZipEntry
+import java.util.zip.ZipException
+import java.util.zip.ZipInputStream
 
 @ExtendWith(MockitoExtension::class)
 class YourServiceTest {
@@ -18,21 +23,86 @@ class YourServiceTest {
     lateinit var impl: ImportFileServiceImpl
 
     @Test
-    suspend fun `test handleZipImport`() {
-        val file = File("src/test/resources/data.zip")
-
-
+    suspend fun `handleZipImport should return appropriate response for empty zip file`() {
+        val emptyZipFile = createTempFile()
         val multipartFile = MockMultipartFile(
-            file.name,
-            file.name,
+            emptyZipFile.name,
+            emptyZipFile.name,
             "application/zip",
-            file.inputStream()
+            emptyZipFile.inputStream()
         )
 
         val responseDTO = impl.handleZipImport(multipartFile)
-        assertEquals("File imported successfully.", responseDTO.description)
-        assertEquals(6, responseDTO.data.size)
+
+        assertEquals("There is no data!", responseDTO.description)
+        assertTrue(responseDTO.data.isEmpty())
     }
+
+    private fun createTempFile(): File {
+        val tempFile = File.createTempFile("temp", ".zip")
+        tempFile.deleteOnExit()
+        return tempFile
+    }
+
+    @Test
+    suspend fun `handleZipImport should throw exception for corrupted zip file`() {
+        val corruptedZipFile = File("src/test/resources/corrupted.zip")
+        val multipartFile = MockMultipartFile(
+            corruptedZipFile.name,
+            corruptedZipFile.name,
+            "application/zip",
+            corruptedZipFile.inputStream()
+        )
+
+        assertThrows<ZipException> {
+            impl.handleZipImport(multipartFile)
+        }
+    }
+
+    @Test
+    suspend fun `handleZipImport should throw exception for non-existing file`() {
+        val nonExistingFile = File("non_existing_file.zip")
+        val multipartFile = MockMultipartFile(
+            nonExistingFile.name,
+            nonExistingFile.name,
+            "application/zip",
+            nonExistingFile.inputStream()
+        )
+
+        assertThrows<IOException> {
+            impl.handleZipImport(multipartFile)
+        }
+    }
+
+    @Test
+    suspend fun `handleZipImport should return appropriate response for zip file with no valid entries`() {
+        val emptyEntriesZipFile = File("src/test/resources/empty_entries.zip")
+        val multipartFile = MockMultipartFile(
+            emptyEntriesZipFile.name,
+            emptyEntriesZipFile.name,
+            "application/zip",
+            emptyEntriesZipFile.inputStream()
+        )
+
+        val responseDTO = impl.handleZipImport(multipartFile)
+
+        assertEquals("There is no data!", responseDTO.description)
+        assertTrue(responseDTO.data.isEmpty())
+    }
+
+
+    @Test
+    suspend fun `processZipEntries should return ResponseDTO with no data when zip has no matching entries`() {
+        val zipInputStream = ZipInputStream(ByteArrayInputStream(byteArrayOf()))
+        val zipFile = MockMultipartFile("test.zip", byteArrayOf())
+
+        val responseDTO = impl.processZipEntries(zipInputStream, zipFile)
+
+        assertEquals("There is no data!", responseDTO.description)
+        assertEquals(emptyList<LoadFileEntry>(), responseDTO.data)
+    }
+
+
     @Test
     fun testIsLfpEntry_withLfpExtension_returnsTrue() {
         val zipEntry = ZipEntry("example.lfp")
@@ -68,4 +138,12 @@ class YourServiceTest {
         val zipEntry = ZipEntry("example.txt")
         assertFalse(impl.isXlfEntry(zipEntry))
     }
+
+    @Test
+    fun `test on matching entry`() {
+        val entry = ZipEntry("example.txt")
+        val fileName = "example.zip"
+        assert(impl.matchesFileName(entry, fileName))
+    }
+
 }

@@ -37,11 +37,11 @@ class ImportFileServiceImpl : ImportFileService {
         return deferred.await()
     }
 
-    private suspend fun processZipEntries(zipInputStream: ZipInputStream, zipFile: MultipartFile): ResponseDTO {
+    suspend fun processZipEntries(zipInputStream: ZipInputStream, zipFile: MultipartFile): ResponseDTO {
         val entries = mutableListOf<LoadFileEntry>()
         var entry = zipInputStream.nextEntry
         while (entry != null) {
-            if (!entry.isDirectory && entry.name.startsWith(zipFile.originalFilename.toString().removeSuffix(".zip"))) {
+            if (!entry.isDirectory && matchesFileName(entry, zipFile.originalFilename.toString())) {
                 val reader = InputStreamReader(zipInputStream.readBytes().inputStream())
                 when {
                     isLfpEntry(entry) -> entries.addAll(LoadFileParser.parseCsv(reader))
@@ -50,19 +50,23 @@ class ImportFileServiceImpl : ImportFileService {
             }
             entry = zipInputStream.nextEntry
         }
-        Validator.validateControlNumbers(entries)
-        Validator.validateImagePathExtensions(entries)
+        Validator.validate(entries)
         return ResponseDTO(
                 description = if(entries.isEmpty()) "There is no data!" else "File imported successfully.",
                 data = entries
         )
     }
 
-    private fun isLfpEntry(entry: ZipEntry): Boolean {
+    fun matchesFileName(entry: ZipEntry, fileName: String): Boolean {
+        val fileNameWithoutExtension = fileName.removeSuffix(".zip")
+        return !entry.isDirectory && entry.name.startsWith(fileNameWithoutExtension)
+    }
+
+    fun isLfpEntry(entry: ZipEntry): Boolean {
         return entry.name.lowercase(Locale.getDefault()).endsWith(FileType.LFP.name.lowercase(Locale.getDefault()))
     }
 
-    private fun isXlfEntry(entry: ZipEntry): Boolean {
+    fun isXlfEntry(entry: ZipEntry): Boolean {
         return entry.name.lowercase(Locale.getDefault()).endsWith(FileType.XLF.name.lowercase(Locale.getDefault()))
     }
 }

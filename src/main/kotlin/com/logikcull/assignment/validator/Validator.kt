@@ -11,6 +11,11 @@ class Validator {
         private val regex = Regex("^[a-zA-Z]+-\\d{6}$")
         private val allowedExtensions = setOf("tif", "jpg", "png", "pdf")
 
+        fun validate(entries: List<LoadFileEntry>) {
+            validateControlNumbers(entries)
+            validateImagePathExtensions(entries)
+        }
+
         fun validateControlNumbers(entries: List<LoadFileEntry>) {
             val errorList = entries.filterNot { entry -> entry.controlNumber.matches(regex) }
                 .map { entry -> "ControlNumber ${entry.controlNumber} does not match!" }
