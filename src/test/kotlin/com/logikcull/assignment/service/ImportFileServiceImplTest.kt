@@ -2,19 +2,24 @@ package com.logikcull.assignment.service
 
 import com.logikcull.assignment.model.LoadFileEntry
 import com.logikcull.assignment.service.impl.ImportFileServiceImpl
+import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.InjectMocks
+import org.mockito.Mockito.mock
+import org.mockito.Mockito.`when`
 import org.mockito.junit.jupiter.MockitoExtension
 import org.springframework.mock.web.MockMultipartFile
 import java.io.ByteArrayInputStream
 import java.io.File
+import java.io.FileInputStream
 import java.io.IOException
 import java.util.zip.ZipEntry
 import java.util.zip.ZipException
 import java.util.zip.ZipInputStream
+import javax.validation.ValidationException
 
 @ExtendWith(MockitoExtension::class)
 class YourServiceTest {
@@ -23,19 +28,25 @@ class YourServiceTest {
     lateinit var impl: ImportFileServiceImpl
 
     @Test
-    suspend fun `handleZipImport should return appropriate response for empty zip file`() {
-        val emptyZipFile = createTempFile()
-        val multipartFile = MockMultipartFile(
-            emptyZipFile.name,
-            emptyZipFile.name,
-            "application/zip",
-            emptyZipFile.inputStream()
-        )
+    fun `handleZipImport should return appropriate response for validation error`() {
+        val mockedException = ValidationException("Invalid data")
+        val multipartFile = mock(MockMultipartFile::class.java)
+        `when`(multipartFile.inputStream).thenThrow(mockedException)
 
-        val responseDTO = impl.handleZipImport(multipartFile)
+        val responseDTO = runBlocking { impl.handleZipImport(multipartFile) }
 
-        assertEquals("There is no data!", responseDTO.description)
-        assertTrue(responseDTO.data.isEmpty())
+        assertEquals("Validation error: ${mockedException.message}", responseDTO.description)
+    }
+
+    @Test
+    fun `handleZipImport should return appropriate response for unexpected error`() {
+        val mockedException = IOException("Unexpected error")
+        val multipartFile = mock(MockMultipartFile::class.java)
+        `when`(multipartFile.inputStream).thenThrow(mockedException)
+
+        val responseDTO = runBlocking { impl.handleZipImport(multipartFile) }
+
+        assertEquals("An unexpected error occurred while importing ZIP file.", responseDTO.description)
     }
 
     private fun createTempFile(): File {
