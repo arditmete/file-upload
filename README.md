@@ -14,7 +14,7 @@ This project provides a Kotlin-based API for processing Load Files commonly used
 
 ### Overview
 
-The Load File Processor API is designed to facilitate the parsing and validation of Load Files from ZIP archives. It exposes an endpoint to accept ZIP file uploads, processes the contained LFP and XLF files, and returns the parsed data in a structured format.
+The Load File Processor API is designed to facilitate the parsing and validation of Load Files from ZIP archives. It employs coroutines for asynchronous processing, enhancing efficiency and scalability. The API exposes an endpoint to accept ZIP file uploads, processes the contained LFP and XLF files asynchronously using coroutines, and returns the parsed data in a structured format.
 
 ### Installation
 
