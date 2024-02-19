@@ -20,8 +20,7 @@ class ImportFileServiceImpl : ImportFileService {
 
     override suspend fun handleZipImport(zipFile: MultipartFile): ResponseDTO {
         return try {
-            val entries = processZipFile(zipFile)
-                ResponseDTO(description = "File imported successfully.", data = entries.data)
+            processZipFile(zipFile)
         } catch (e: ValidationException) {
             ResponseDTO(description = "Validation error: ${e.message}")
         } catch (e: Exception) {
