@@ -28,6 +28,9 @@ dependencies {
 	implementation ("javax.validation:validation-api:2.0.1.Final")
 	implementation("org.hibernate.validator:hibernate-validator:6.2.0.Final")
 	implementation ("org.springdoc:springdoc-openapi-ui:1.6.4")
+	implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2")
+	implementation ("org.reactivestreams:reactive-streams:1.0.3")
+	implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:1.5.2")
 }
 
 tasks.withType<KotlinCompile> {

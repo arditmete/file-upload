@@ -18,7 +18,7 @@ class YourServiceTest {
     lateinit var impl: ImportFileServiceImpl
 
     @Test
-    fun `test handleZipImport`() {
+    suspend fun `test handleZipImport`() {
         val file = File("src/test/resources/data.zip")
 
 

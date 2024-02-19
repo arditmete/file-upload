@@ -12,7 +12,7 @@ import java.util.*
 @RestController
 class LoadFileController(val importFileService: ImportFileService) {
     @PostMapping("/process")
-    fun import(@RequestParam("file") file: MultipartFile): ResponseDTO {
+    suspend fun import(@RequestParam("file") file: MultipartFile): ResponseDTO {
         Validator.isZipFile(file)
         return importFileService.handleZipImport(file)
     }
